@@ -1,4 +1,24 @@
-/*C5*/SET SCHEMA PUBLIC
+/*C4*/SET SCHEMA PUBLIC
 DISCONNECT
-/*C6*/SET SCHEMA PUBLIC
-create table Invoicing.Product (number integer not null, description varchar(50), primary key (number))
+/*C5*/SET SCHEMA PUBLIC
+create table Invoicing.Author (oid varchar(32) not null, name varchar(50), primary key (oid))
+create table Invoicing.Category (oid varchar(32) not null, description varchar(50), primary key (oid))
+alter table INVOICING.CUSTOMER add column city varchar(20)
+alter table INVOICING.CUSTOMER add column state varchar(30)
+alter table INVOICING.CUSTOMER add column street varchar(30)
+alter table INVOICING.CUSTOMER add column zipCode integer
+create table Invoicing.Invoice (oid varchar(32) not null, date date, number integer, remarks varchar(255), year integer, customer_number integer not null, primary key (oid))
+create table Invoicing.Invoice_details (Invoice_oid varchar(32) not null, product_number integer, quantity integer not null)
+alter table INVOICING.PRODUCT add column photos varchar(32)
+alter table INVOICING.PRODUCT add column price numeric(19,2)
+alter table INVOICING.PRODUCT add column remarks varchar(255)
+alter table INVOICING.PRODUCT add column author_oid varchar(32)
+alter table INVOICING.PRODUCT add column category_oid varchar(32)
+alter table Invoicing.Invoice add constraint FKd9dx61qvqeikb7pkdbivebqu1 foreign key (customer_number) references Invoicing.Customer
+alter table Invoicing.Invoice_details add constraint FKi1r56p1hqv28yvcc29lyqnpsw foreign key (product_number) references Invoicing.Product
+alter table Invoicing.Invoice_details add constraint FKsed3i3cae25o1d4bwjstfn8wc foreign key (Invoice_oid) references Invoicing.Invoice
+alter table Invoicing.Product add constraint FKtaflstdu5wk59v1xhnk96vdyx foreign key (author_oid) references Invoicing.Author
+alter table Invoicing.Product add constraint FKh3iamu1otf3neq0kuujugsb0l foreign key (category_oid) references Invoicing.Category
+SET SCHEMA INVOICING
+INSERT INTO CUSTOMER VALUES(1,'Eneias Oliveira de Liz','Rio do Sul','Santa Catarina','Rua Princessa Isabel',89164)
+COMMIT
