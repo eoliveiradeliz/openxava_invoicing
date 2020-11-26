@@ -3,6 +3,9 @@ package com.yourcompany.invoicing.model;
 import javax.persistence.*;
 import org.openxava.annotations.*;
 
+@View(name = "Simple", // This view is used only when “Simple” is specified
+		members = "number, name" // Shows only number and name in the same line
+)
 @Entity // This marks Customer class as an entity
 public class Customer {
 

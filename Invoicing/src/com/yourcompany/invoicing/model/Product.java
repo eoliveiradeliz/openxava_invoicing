@@ -30,6 +30,10 @@ public class Product {
 
 	@Stereotype("MEMO") // This is for a big text, a text area or equivalent will be used
 	private String remarks;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@DescriptionsList
+	private Author author;
 
 	public int getNumber() {
 		return number;
@@ -79,4 +83,13 @@ public class Product {
 		this.remarks = remarks;
 	}
 
+	public Author getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(Author author) {
+		this.author = author;
+	}
+
+	
 }

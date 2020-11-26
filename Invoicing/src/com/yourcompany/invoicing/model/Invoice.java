@@ -1,13 +1,19 @@
 package com.yourcompany.invoicing.model;
+
 import com.yourcompany.invoicing.calculators.*;
 
 import java.time.*;
+import java.util.*;
+
 import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
 import org.openxava.calculators.*;
 
-
+@View(members = // This view has no name, so it will be the view used by default
+"year, number, date;" + // Comma separated means in the same line
+		"customer;" + // Semicolon means a new line
+		"details;" + "remarks")
 @Entity
 public class Invoice {
 
@@ -22,23 +28,25 @@ public class Invoice {
 	@DefaultValueCalculator(CurrentYearCalculator.class) // Current year
 	private int year;
 
-	
 	@Column(length = 6)
-	@DefaultValueCalculator(value=NextNumberForYearCalculator.class, properties=@PropertyValue(name="year")) // To inject the value of year from Invoice to
+	@DefaultValueCalculator(value = NextNumberForYearCalculator.class, properties = @PropertyValue(name = "year")) 
+	// To inject the value of year from Invoice to
 	private int number;
 
 	@Required
 	@DefaultValueCalculator(CurrentLocalDateCalculator.class) // Current date
 	private LocalDate date;
 
+	@ManyToOne(fetch = FetchType.LAZY, optional = false) // Customer is required
+	@ReferenceView("Simple") // The view named 'Simple' is used to display this reference
+	private Customer customer;
+
 	@Stereotype("MEMO")
 	private String remarks;
-	
-	@ManyToOne(fetch=FetchType.LAZY, optional=false) // Customer is required
-	private Customer customer;
-	
-	
-	
+
+	@ElementCollection
+	@ListProperties("product.number, product.description, quantity")
+	private Collection<Detail> details;
 
 	public String getOid() {
 		return oid;
@@ -88,6 +96,12 @@ public class Invoice {
 		this.customer = customer;
 	}
 
-	
+	public Collection<Detail> getDetails() {
+		return details;
+	}
+
+	public void setDetails(Collection<Detail> details) {
+		this.details = details;
+	}
 
 }
